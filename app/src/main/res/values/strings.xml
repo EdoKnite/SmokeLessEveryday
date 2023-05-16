@@ -1,5 +1,78 @@
 <resources>
-    <string name="app_name">SmokeLessEveryday</string>
+    <string name="app_name">Stop Smoking</string>
     <string name="progress_label">Progress</string>
+    <string name="health_label">Health</string>
+    <string name="trophies_label">Trophies</string>
+    <string name="rewards_label">Rewards</string>
+    <string name="msg_no_trophy">No trophy</string>
     <string name="profile">Profile</string>
+    <string-array name="days">
+        <item >2 days</item>
+        <item>3 days</item>
+        <item>4 days</item>
+        <item>5 days</item>
+        <item>6 days</item>
+        <item>1 week</item>
+        <item>10 days</item>
+        <item>2 weeks</item>
+        <item>3 weeks</item>
+        <item>1 month</item>
+        <item>2 months</item>
+        <item>3 months</item>
+        <item>1 year</item>
+        <item>5 years</item>
+    </string-array>
+    <string-array name="rewardMenu">
+        <item name="edit">Edit</item>
+        <item name="cancelPurchase">Cancel purchase</item>
+        <item name="delete">Delete</item>
+    </string-array>
+    <string-array name="miniRewardMenu">
+        <item name="edit">Edit</item>
+        <item name="delete">Delete</item>
+    </string-array>
+    <string-array name="devises">
+        <item name="DA">Dollar</item>
+        <item name="EUR">EUR</item>
+        <item name="GBP">GBP</item>
+    </string-array>
+    <string-array name="positive_messages">
+        <item name="one">I choose a healthy life!</item>
+        <item name="two">I control my life!</item>
+        <item name="three">I\'m free not to smoke!</item>
+        <item name="fore">I can accomplish anything!</item>
+    </string-array>
+
+    <string name="devise">Devise</string>
+    <string name="price_per_pack">Price per pack</string>
+    <string name="years_of_smoking">Years of smoking</string>
+    <string name="cigarettes_per_pack">Cigarettes in a packet</string>
+    <string name="cigarette_per_day">Cigarettes per day</string>
+    <string name="save_profile">Save profile</string>
+    <string name="field_required">Field required</string>
+    <string name="msg_required_fields_empty">You forgot to fill in one or more required fields.</string>
+    <string name="day">Day</string>
+    <string name="days">Days</string>
+    <string name="non_smoker">Non-smoker</string>
+    <string name="the_money_saved">The money saved</string>
+    <string name="recovered_life_expectancy">Recovered life expectancy</string>
+    <string name="unsmoked_cigarettes">Unsmoked cigarettes</string>
+    <string name="during_the_time_you_smoked">During the time you smoked:</string>
+    <string name="smoked_cigarettes">Smoked Cigarettes</string>
+    <string name="money_spent">Money Spent</string>
+    <string name="life_lost">life lost</string>
+    <string name="what_accept_in_return">What do you accept in return?</string>
+    <string name="money_and_life_expectancy">Money and Life Expectancy</string>
+    <string name="name">Name</string>
+    <string name="price">Price</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="date_stopping">Date stopping</string>
+    <string name="time_stopping">Time stopping</string>
+    <string name="buy">Buy</string>
+    <string name="not_enough_money">Not enough money</string>
+    <string name="available">Available</string>
+    <string name="bought">Bought</string>
+    <string name="one_week">1 Week</string>
+    <string name="two_week">2 Weeks</string>
 </resources>
