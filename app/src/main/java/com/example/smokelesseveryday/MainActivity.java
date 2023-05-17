@@ -1,15 +1,17 @@
 package com.example.smokelesseveryday;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,27 +21,28 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private NavController navController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView bottom_navigation = findViewById(R.id.bottom_navigation);
-
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_container);
-        assert navHostFragment != null;
-        NavController navController = navHostFragment.getNavController();
-
-        bottom_navigation.setOnItemSelectedListener(item -> {
-
-            NavigationUI.onNavDestinationSelected(item, navController);
-
-            return true;
-        });
-
         configureToolbar();
 
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState, persistentState);
+
+        BottomNavigationView bottom_navigation = findViewById(R.id.bottom_navigation);
+        navController = Navigation.findNavController(this, R.id.fragment_container);
+        NavigationUI.setupWithNavController(bottom_navigation, navController);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        return navController.navigateUp() || super.onSupportNavigateUp();
     }
 
     @Override

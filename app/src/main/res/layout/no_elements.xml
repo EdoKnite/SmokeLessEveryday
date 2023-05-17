@@ -16,7 +16,6 @@
 
     </ImageView>
     <TextView
-        android:id="@+id/message_no_elements"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

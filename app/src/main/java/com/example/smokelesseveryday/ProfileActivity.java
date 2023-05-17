@@ -4,19 +4,19 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.os.Bundle;
-import com.example.smokelesseveryday.repository.ProfileRepository;
+import com.example.smokelesseveryday.repository.AppRepository;
 
 
 
 public class ProfileActivity extends AppCompatActivity {
-    private ProfileRepository profileRepository;
+    private AppRepository appRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         configureToolbar();
-        this.profileRepository = ProfileRepository.getInstance(getApplication());
+        this.appRepository = AppRepository.getInstance(getApplication());
     }
 
     private void configureToolbar() {
