@@ -2,9 +2,6 @@
     <string name="app_name">Smoke Less Everyday</string>
     <string name="progress_label">Progress</string>
     <string name="health_label">Health</string>
-    <string name="trophies_label">Trophies</string>
-    <string name="rewards_label">Rewards</string>
-    <string name="msg_no_trophy">No trophy</string>
     <string name="profile">Profile</string>
     <string-array name="days">
         <item>2 days</item>
@@ -21,15 +18,6 @@
         <item>3 months</item>
         <item>1 year</item>
         <item>5 years</item>
-    </string-array>
-    <string-array name="rewardMenu">
-        <item name="edit">Edit</item>
-        <item name="cancelPurchase">Cancel purchase</item>
-        <item name="delete">Delete</item>
-    </string-array>
-    <string-array name="miniRewardMenu">
-        <item name="edit">Edit</item>
-        <item name="delete">Delete</item>
     </string-array>
     <string-array name="currency">
         <item name="DA">USD</item>
