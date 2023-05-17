@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".home.MainActivity">
+    tools:context=".MainActivity">
 
-    <include layout="@layout/toolbar"></include>
-    <FrameLayout
+    <include layout="@layout/toolbar" />
+
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg_color"
+        android:layout_above="@+id/bottom_navigation"
         android:layout_marginTop="?attr/actionBarSize"
-        android:layout_above="@+id/bottom_navigation">
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btn_new_award_activity_main"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="10dp"
-            android:contentDescription="@string/app_name"
-            app:srcCompat="@drawable/ic_add" />
-    </FrameLayout>
+        android:background="@color/bg_color"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph"
+        tools:layout="@layout/fragment_health" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_navigation_menu"
         android:background="@color/white"
-        />
+        app:menu="@menu/bottom_navigation_menu" />
 
 </RelativeLayout>

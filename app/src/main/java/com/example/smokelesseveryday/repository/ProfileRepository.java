@@ -14,11 +14,19 @@ import java.util.Objects;
 public class ProfileRepository {
     private final ProfileDao profileDao;
     private final LiveData<List<Profile>> profiles;
+    private static ProfileRepository INSTANCE;
 
     public ProfileRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         profileDao = db.ProfileDao();
         profiles = profileDao.getProfiles();
+    }
+
+    public static ProfileRepository getInstance(Application application) {
+        if (INSTANCE == null) {
+            INSTANCE = new ProfileRepository(application);
+        }
+        return INSTANCE;
     }
 
     public Profile getProfile() {

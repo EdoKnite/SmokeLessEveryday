@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home.fragment.HealthFragment">
+    tools:context=".fragments.HealthFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,6 +24,9 @@
             android:layoutAnimation="@anim/layout_animation_fall_down"
             />
     </LinearLayout>
-    <include layout="@layout/no_elements" android:visibility="gone"></include>
+
+    <include
+        layout="@layout/no_elements"
+        android:visibility="gone" />
 
 </FrameLayout>
