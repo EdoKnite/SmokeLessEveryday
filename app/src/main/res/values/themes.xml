@@ -11,4 +11,5 @@
         <item name="android:indeterminateOnly">false</item>
         <item name="android:progressDrawable">@drawable/stats_progress</item>
     </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

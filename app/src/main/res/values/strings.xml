@@ -32,18 +32,13 @@
         <item name="delete">Delete</item>
     </string-array>
     <string-array name="currency">
-        <item name="DA">Dollar</item>
+        <item name="DA">USD</item>
         <item name="EUR">EUR</item>
         <item name="GBP">GBP</item>
-    </string-array>
-    <string-array name="positive_messages">
-        <item name="one">I choose a healthy life!</item>
-        <item name="two">I control my life!</item>
-        <item name="three">I\'m free not to smoke!</item>
-        <item name="fore">I can accomplish anything!</item>
+        <item name="RON">RON</item>
     </string-array>
 
-    <string name="devise">Devise</string>
+    <string name="currency">Currency</string>
     <string name="price_per_pack">Price per pack</string>
     <string name="years_of_smoking">Years of smoking</string>
     <string name="cigarettes_per_pack">Cigarettes in a packet</string>
@@ -75,4 +70,5 @@
     <string name="bought">Bought</string>
     <string name="one_week">1 Week</string>
     <string name="two_week">2 Weeks</string>
+    <string name="_76_650">76 650</string>
 </resources>
