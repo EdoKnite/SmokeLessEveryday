@@ -156,7 +156,7 @@ public class ProgressFragment extends Fragment {
 
     private void setProgressValues(float numberOfDays) {
         LocalDateTime currentDateTime = LocalDateTime.now();
-        LocalDate quittingDate = LocalDate.parse(profile.quittingDate, dateTimeFormatter);
+        LocalDateTime quittingDate = LocalDateTime.parse(profile.quittingDate, dateTimeFormatter);
         Duration duration = Duration.between(quittingDate, currentDateTime);
 
         float progressPercent = duration.toDays() * 100 / numberOfDays;
