@@ -45,7 +45,7 @@ public class ProgressFragment extends Fragment {
     private ProgressBar progressBar;
 
     private final HashMap<String, Integer> selectedDays
-            = new HashMap<String, Integer>();
+            = new HashMap<>();
 
     @Nullable
     @Override
@@ -105,8 +105,8 @@ public class ProgressFragment extends Fragment {
         menu.show();
         menu.setOnMenuItemClickListener(item -> {
             selectedDaysTextView.setText(item.getTitle());
-            int nbDays = selectedDays.get(item.getTitle());
-            setProgressValues(nbDays);
+            int numberOfDays = selectedDays.get(item.getTitle());
+            setProgressValues(numberOfDays);
             return false;
         });
     }
@@ -133,7 +133,7 @@ public class ProgressFragment extends Fragment {
 //            }, delay);
         }
 
-        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         LocalDate dateOfBeginning = LocalDate.now();
         dateOfBeginning = dateOfBeginning.minusYears(profile.yearsOfSmoking);
@@ -148,18 +148,18 @@ public class ProgressFragment extends Fragment {
         float moneySpent = (float) cigaretteSmoked * profile.pricePerPack / profile.cigarettesInPack;
         moneySpentTextView.setText((int) moneySpent + " " + profile.currency);
 
-        int nbDays = selectedDays.get(selectedDaysTextView.getText().toString());;
-        setProgressValues(nbDays);
+        int numberOfDays = selectedDays.get(selectedDaysTextView.getText().toString());
+        setProgressValues(numberOfDays);
 
     }
 
 
-    private void setProgressValues(float nbDays) {
+    private void setProgressValues(float numberOfDays) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalDate quittingDate = LocalDate.parse(profile.quittingDate, dateTimeFormatter);
         Duration duration = Duration.between(quittingDate, currentDateTime);
 
-        float progressPercent = duration.toDays() * 100 / nbDays;
+        float progressPercent = duration.toDays() * 100 / numberOfDays;
 
         String progressPercentStr;
         if (progressPercent > 100) {
