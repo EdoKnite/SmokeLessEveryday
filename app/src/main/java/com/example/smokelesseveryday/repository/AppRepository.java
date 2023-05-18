@@ -4,7 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.smokelesseveryday.repository.database.AppDatabase;
+import com.example.smokelesseveryday.repository.database.SmokeLessDatabase;
 import com.example.smokelesseveryday.repository.database.dao.HealthDao;
 import com.example.smokelesseveryday.repository.database.dao.ProfileDao;
 import com.example.smokelesseveryday.repository.database.entities.Health;
@@ -18,10 +18,9 @@ public class AppRepository {
     private final HealthDao healthDao;
     private final LiveData<List<Profile>> profiles;
     private final LiveData<List<Health>> achievements;
-    private static AppRepository INSTANCE;
 
     public AppRepository(Application application) {
-        AppDatabase db = AppDatabase.getDatabase(application);
+        SmokeLessDatabase db = SmokeLessDatabase.getDatabase(application);
         profileDao = db.ProfileDao();
         healthDao = db.HealthDao();
 
@@ -29,27 +28,20 @@ public class AppRepository {
         achievements = healthDao.getAchievements();
     }
 
-    public static AppRepository getInstance(Application application) {
-        if (INSTANCE == null) {
-            INSTANCE = new AppRepository(application);
-        }
-        return INSTANCE;
-    }
-
     public LiveData<List<Health>> getAchievements() {
         return achievements;
     }
 
     public void insertAchievement(Health... health){
-        AppDatabase.databaseWriteExecutor.execute(() -> healthDao.insertAchievement(health));
+        SmokeLessDatabase.databaseWriteExecutor.execute(() -> healthDao.insertAchievement(health));
     }
 
     public void updateAchievement(Health health){
-        AppDatabase.databaseWriteExecutor.execute(() -> healthDao.update(health));
+        SmokeLessDatabase.databaseWriteExecutor.execute(() -> healthDao.update(health));
     }
 
     public void deleteAchievement(Health health){
-        AppDatabase.databaseWriteExecutor.execute(() -> healthDao.delete(health));
+        SmokeLessDatabase.databaseWriteExecutor.execute(() -> healthDao.delete(health));
     }
 
     public Profile getProfile() {
@@ -58,11 +50,11 @@ public class AppRepository {
     }
 
     public void insertProfile(Profile profile) {
-        AppDatabase.databaseWriteExecutor.execute(() -> profileDao.insertProfile(profile));
+        SmokeLessDatabase.databaseWriteExecutor.execute(() -> profileDao.insertProfile(profile));
     }
 
     public void updateProfile(Profile profile) {
-        AppDatabase.databaseWriteExecutor.execute(() -> profileDao.update(profile));
+        SmokeLessDatabase.databaseWriteExecutor.execute(() -> profileDao.update(profile));
     }
 
 }

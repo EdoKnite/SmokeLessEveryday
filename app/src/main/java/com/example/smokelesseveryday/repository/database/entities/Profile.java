@@ -11,10 +11,10 @@ public class Profile {
     public int cigarettesPerDay;
     public int cigarettesInPack;
     public int yearsOfSmoking;
-    public int pricePerPack;
+    public float pricePerPack;
     public String currency;
 
-    public Profile(int uid, String quittingDate, int cigarettesPerDay, int cigarettesInPack, int yearsOfSmoking, int pricePerPack, String currency) {
+    public Profile(int uid, String quittingDate, int cigarettesPerDay, int cigarettesInPack, int yearsOfSmoking, float pricePerPack, String currency) {
         this.uid = uid;
         this.quittingDate = quittingDate;
         this.cigarettesPerDay = cigarettesPerDay;

@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ProfileActivity">
-    <include layout="@layout/toolbar"></include>
+
+    <include layout="@layout/toolbar" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,7 +32,7 @@
                     android:ems="10"
                     android:hint="@string/date_stopping"
                     android:backgroundTint="@color/white"
-                    android:inputType="number"
+                    android:inputType="datetime"
                     android:textColorHighlight="@color/colorPrimary"
                     android:textColorLink="@color/colorPrimary"
                     android:textCursorDrawable="@color/colorPrimary">
@@ -204,7 +205,7 @@
                     android:drawablePadding="10dp"
                     android:ems="10"
                     android:hint="@string/price_per_pack"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:backgroundTint="@color/white"
                     android:textColorHighlight="@color/colorPrimary"
                     android:textColorLink="@color/colorPrimary"

@@ -10,12 +10,13 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smokelesseveryday.R;
 import com.example.smokelesseveryday.adapters.HealthAdapter;
-import com.example.smokelesseveryday.repository.AppRepository;
+import com.example.smokelesseveryday.viewmodel.AppViewModel;
 
 
 public class HealthFragment extends Fragment {
@@ -36,12 +37,13 @@ public class HealthFragment extends Fragment {
         noElements.setVisibility(View.GONE);
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_health);
+        AppViewModel appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
+
         HealthAdapter adapter = new HealthAdapter(new HealthAdapter.HealthDiff());
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        AppRepository appRepository = AppRepository.getInstance(requireActivity().getApplication());
-        appRepository.getAchievements().observe(getViewLifecycleOwner(), adapter::submitList);
+        appViewModel.getAchievements().observe(getViewLifecycleOwner(), adapter::submitList);
     }
 }

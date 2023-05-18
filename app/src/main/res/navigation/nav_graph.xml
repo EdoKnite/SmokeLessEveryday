@@ -3,8 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/progressFragment">
+    app:startDestination="@id/healthFragment">
+    <fragment
+        android:id="@+id/progressFragment"
+        android:name="com.example.smokelesseveryday.fragments.ProgressFragment"
+        android:label="ProgressFragment"
+        tools:layout="@layout/fragment_progress">
 
+    </fragment>
     <fragment
         android:id="@+id/healthFragment"
         android:name="com.example.smokelesseveryday.fragments.HealthFragment"
@@ -13,11 +19,5 @@
         <action
             android:id="@+id/action_healthFragment_to_progressFragment"
             app:destination="@id/progressFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/progressFragment"
-        android:name="com.example.smokelesseveryday.fragments.ProgressFragment"
-        android:label="ProgressFragment"
-        tools:layout="@layout/fragment_progress">
     </fragment>
 </navigation>

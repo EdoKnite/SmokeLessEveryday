@@ -16,22 +16,23 @@ import com.example.smokelesseveryday.repository.database.entities.Profile;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Profile.class, Health.class}, version = 1, exportSchema = false)
-public abstract class AppDatabase extends RoomDatabase {
+@Database(entities = {Profile.class, Health.class}, version = 1)
+public abstract class SmokeLessDatabase extends RoomDatabase {
     public abstract ProfileDao ProfileDao();
+
     public abstract HealthDao HealthDao();
 
-    private static volatile AppDatabase INSTANCE;
+    private static volatile SmokeLessDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    public static AppDatabase getDatabase(final Context context) {
+    public static SmokeLessDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            synchronized (AppDatabase.class) {
+            synchronized (SmokeLessDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                    AppDatabase.class, "smoke-less-db")
+                                    SmokeLessDatabase.class, "smoke-less-db")
                             .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
@@ -47,12 +48,15 @@ public abstract class AppDatabase extends RoomDatabase {
 
             databaseWriteExecutor.execute(() -> {
                 HealthDao healthDao = INSTANCE.HealthDao();
+                ProfileDao profileDao = INSTANCE.ProfileDao();
 
                 healthDao.insertAchievement(
-                        new Health("After 20 minutes", 0,"In 20 minutes",
+                        new Health("After 20 minutes", 0, "In 20 minutes",
                                 "Your blood pressure and heart rate drop."),
-                        new Health("After 8 hours", 0,"In 8 hours",
+                        new Health("After 8 hours", 0, "In 8 hours",
                                 "The level of carbon monoxide in your blood is back to normal."));
+
+                profileDao.insertProfile(new Profile(2, "string", 20, 20, 5, 20, "RON"));
 
             });
         }
