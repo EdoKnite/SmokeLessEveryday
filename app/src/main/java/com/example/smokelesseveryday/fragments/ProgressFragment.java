@@ -40,7 +40,7 @@ public class ProgressFragment extends Fragment {
     private TextView nonSmokerTextView, recoveredLifeExpectancyTextView, moneySavedTextView,
             unsmokedCigarettesTextView, moneySpentTextView, lifeLostTextView,
             smokedCigarettesTextView, dayTextView, selectedDaysTextView, progressPercentTextView;
-    public static DateTimeFormatter dateTimeFormatter;
+    private DateTimeFormatter dateTimeFormatter;
     private Profile profile;
     private ProgressBar progressBar;
 
@@ -89,6 +89,7 @@ public class ProgressFragment extends Fragment {
         moneySpentTextView = view.findViewById(R.id.money_spent_text_view);
         lifeLostTextView = view.findViewById(R.id.life_lost_text_view);
 
+        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         setData();
     }
 
@@ -112,6 +113,7 @@ public class ProgressFragment extends Fragment {
     }
 
     public void setData() {
+
         AppViewModel appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
         this.profile = appViewModel.getProfile();
 
@@ -119,7 +121,6 @@ public class ProgressFragment extends Fragment {
 
             Intent intent = new Intent(getContext(), ProfileActivity.class);
             startActivity(intent);
-            getActivity().finish();
         } else {
             calculateValues();
 
@@ -127,14 +128,13 @@ public class ProgressFragment extends Fragment {
 //            final int delay = 1000;
 //            handler.postDelayed(new Runnable() {
 //                public void run() {
-//                    calculateValues(daysStringResource);
+//                    calculateValues();
 //                    handler.postDelayed(this, delay);
 //                }
 //            }, delay);
         }
-
-        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
+//TODO
+        this.profile = new Profile(0, "2023-10-10 10:10:00", 1, 1, 1, 1, "USD");
         LocalDate dateOfBeginning = LocalDate.now();
         dateOfBeginning = dateOfBeginning.minusYears(profile.yearsOfSmoking);
         LocalDate quittingDate = LocalDate.parse(profile.quittingDate, dateTimeFormatter);
@@ -148,9 +148,9 @@ public class ProgressFragment extends Fragment {
         float moneySpent = (float) cigaretteSmoked * profile.pricePerPack / profile.cigarettesInPack;
         moneySpentTextView.setText((int) moneySpent + " " + profile.currency);
 
-        int numberOfDays = selectedDays.get(selectedDaysTextView.getText().toString());
+        selectedDaysTextView.setText("3 days");
+        int numberOfDays = selectedDays.get("3 days");
         setProgressValues(numberOfDays);
-
     }
 
 

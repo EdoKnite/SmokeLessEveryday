@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.smokelesseveryday.fragments.ProgressFragment;
 import com.example.smokelesseveryday.repository.database.entities.Profile;
 import com.example.smokelesseveryday.viewmodel.AppViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,10 +28,12 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class ProfileActivity extends AppCompatActivity {
     private AppViewModel appViewModel;
+    private DateTimeFormatter dateTimeFormatter;
 
     private ImageButton cigarettesPerDayIncrementBtn, cigarettesPerDayDecrementBtn, cigarettesPerPackIncrementBtn, cigarettesPerPackDecrementBtn, yearOfSmokingIncrementBtn, yearOfSmokingDecrementBtn;
     private EditText cigarettesPerDayEditText, cigarettesPerPackEditText, yearOfSmokingEditText, pricePerPackEditText, dateStoppingEditText;
@@ -43,6 +44,8 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         appViewModel = new ViewModelProvider(this).get(AppViewModel.class);
 
@@ -76,9 +79,9 @@ public class ProfileActivity extends AppCompatActivity {
         saveButton.setOnClickListener(v -> saveProfile());
 
         String[] currencies = getResources().getStringArray(R.array.currency);
-
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(ProfileActivity.this, android.R.layout.simple_dropdown_item_1line, currencies);
         currencySpinner.setAdapter(spinnerAdapter);
+
         this.getProfile();
         setEventsToFieldStoppingDate();
     }
@@ -128,7 +131,7 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
             Profile profile = appViewModel.getProfile();
             if (profile == null) {
-                profile = new Profile(1, stoppingDate, Integer.parseInt(cigarettesPerDay), Integer.parseInt(cigarettesPerPack), Integer.parseInt(yearOfSmoking), Integer.parseInt(pricePerPack), currency);
+                profile = new Profile(0, stoppingDate, Integer.parseInt(cigarettesPerDay), Integer.parseInt(cigarettesPerPack), Integer.parseInt(yearOfSmoking), Integer.parseInt(pricePerPack), currency);
                 appViewModel.insertProfile(profile);
             } else {
                 profile = new Profile(profile.uid, stoppingDate, Integer.parseInt(cigarettesPerDay), Integer.parseInt(cigarettesPerPack), Integer.parseInt(yearOfSmoking), Integer.parseInt(pricePerPack), currency);
@@ -192,17 +195,18 @@ public class ProfileActivity extends AppCompatActivity {
     TimePickerDialog.OnTimeSetListener onTimeStoppingSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            LocalDate localDate = LocalDate.parse(dateStoppingEditText.getText().toString(), ProgressFragment.dateTimeFormatter);
+
+            LocalDate localDate = LocalDate.parse(dateStoppingEditText.getText().toString(), dateTimeFormatter);
             LocalTime localTime = LocalTime.of(hourOfDay, minute);
             LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
 
-            dateStoppingEditText.setText(localDateTime.format(ProgressFragment.dateTimeFormatter));
+            dateStoppingEditText.setText(localDateTime.format(dateTimeFormatter));
         }
     };
 
     DatePickerDialog.OnDateSetListener onStoppingDateChangeListener = (view, year, monthOfYear, dayOfMonth) -> {
 
-        String date = LocalDateTime.of(year, monthOfYear, dayOfMonth, 0,0).format(ProgressFragment.dateTimeFormatter);
+        String date = LocalDateTime.of(year, monthOfYear, dayOfMonth, 0,0).format(dateTimeFormatter);
         dateStoppingEditText.setText(date);
 
         showTime(onTimeStoppingSetListener);

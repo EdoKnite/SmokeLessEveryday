@@ -48,15 +48,12 @@ public abstract class SmokeLessDatabase extends RoomDatabase {
 
             databaseWriteExecutor.execute(() -> {
                 HealthDao healthDao = INSTANCE.HealthDao();
-                ProfileDao profileDao = INSTANCE.ProfileDao();
 
                 healthDao.insertAchievement(
                         new Health("After 20 minutes", 0, "In 20 minutes",
                                 "Your blood pressure and heart rate drop."),
                         new Health("After 8 hours", 0, "In 8 hours",
                                 "The level of carbon monoxide in your blood is back to normal."));
-
-                profileDao.insertProfile(new Profile(2, "string", 20, 20, 5, 20, "RON"));
 
             });
         }
