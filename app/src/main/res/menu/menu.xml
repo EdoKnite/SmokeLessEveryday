@@ -2,8 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:title="@string/profile"
+        android:actionLayout="@layout/menu_profile_layout"
+        android:enabled="true"
+        android:visible="true"
         android:id="@+id/action_profile"
         app:showAsAction="always"
         android:icon="@drawable/ic_person"
         />
+
 </menu>
