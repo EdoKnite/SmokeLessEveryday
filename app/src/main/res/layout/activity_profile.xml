@@ -243,6 +243,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             app:srcCompat="@drawable/ic_save"
-            android:contentDescription="@string/save_profile" />
+            android:contentDescription="@string/save_profile"
+            android:background="@drawable/fab_selector"/>
     </LinearLayout>
 </LinearLayout>
