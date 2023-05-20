@@ -7,7 +7,6 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,9 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import android.widget.ImageView;
 
 
+import com.example.smokelesseveryday.fragments.HealthFragment;
+import com.example.smokelesseveryday.fragments.ProgressFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
@@ -30,6 +30,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        BottomNavigationView bottom_navigation = findViewById(R.id.bottom_navigation);
+
+        bottom_navigation.setSelectedItemId(R.id.progress_nav_item);
+        bottom_navigation.setOnItemSelectedListener(item -> {
+            if(item.getItemId() == R.id.health_nav_item){
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new HealthFragment())
+                        .commit();
+
+                return true;
+            }
+
+            else if (item.getItemId() == R.id.progress_nav_item) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new ProgressFragment())
+                        .commit();
+
+                return true;
+
+            }
+
+            return false;
+        });
+
         configureToolbar();
 
     }
@@ -38,9 +63,8 @@ public class MainActivity extends AppCompatActivity {
     public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
         super.onPostCreate(savedInstanceState, persistentState);
 
-        BottomNavigationView bottom_navigation = findViewById(R.id.bottom_navigation);
         navController = Navigation.findNavController(this, R.id.fragment_container);
-        NavigationUI.setupWithNavController(bottom_navigation, navController);
+
     }
 
     @Override
