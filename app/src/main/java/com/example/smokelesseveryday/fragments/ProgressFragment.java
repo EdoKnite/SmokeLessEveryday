@@ -98,6 +98,98 @@ public class ProgressFragment extends Fragment {
         setData();
     }
 
+    public void setData() {
+
+        AppViewModel appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
+        appViewModel.getProfiles().observe(getViewLifecycleOwner(), profiles -> {
+
+            if (profiles.isEmpty()) {
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
+                startActivity(intent);
+            }
+
+            profile = profiles.get(0);
+            calculateValues();
+
+//TODO
+//            final Handler handler = new Handler();
+//            final int delay = 1000;
+//            handler.postDelayed(new Runnable() {
+//                public void run() {
+//                    calculateValues();
+//                    handler.postDelayed(this, delay);
+//                }
+//            }, delay);
+
+
+            LocalDate dateOfBeginningSmoking = LocalDate.now();
+            dateOfBeginningSmoking = dateOfBeginningSmoking.minusYears(profile.yearsOfSmoking);
+            LocalDate quittingDate = LocalDate.parse(profile.quittingDate, dateTimeFormatter);
+
+            Period smokingDuration = Period.between(dateOfBeginningSmoking, quittingDate);
+            lifeLostTextView.setText(String.format(getString(R.string.life_lost_contents),
+                    smokingDuration.getYears(), smokingDuration.getMonths(), smokingDuration.getDays()));
+
+            long cigaretteSmoked = ChronoUnit.DAYS.between(dateOfBeginningSmoking, quittingDate) * profile.cigarettesPerDay;
+            smokedCigarettesTextView.setText(String.valueOf(cigaretteSmoked));
+            float moneySpent = (float) cigaretteSmoked * profile.pricePerPack / profile.cigarettesInPack;
+
+            String moneySpentText = moneySpent + " " + profile.currency;
+            moneySpentTextView.setText(moneySpentText);
+
+            String day = getResources().getStringArray(R.array.days)[1];
+
+            selectedDaysTextView.setText(day);
+            int numberOfDays = sharedPreferences.getInt(day, 0);
+            setProgressValues(numberOfDays);
+
+        });
+
+    }
+
+    private void calculateValues() {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime quittingDate = LocalDateTime.parse(profile.quittingDate, dateTimeFormatter);
+        Duration duration = Duration.between(quittingDate, currentDateTime);
+
+        if (quittingDate.isBefore(currentDateTime)) {
+
+            String nonSmokerString = duration.toDays() + "d " + duration.toHours() % 24 + "h " +
+                    duration.toMinutes() % 60 + "m";
+            nonSmokerTextView.setText(nonSmokerString);
+
+            String recoveredLifeExpectancy = duration.dividedBy(4).toDays() + "d " + duration.dividedBy(4).toHours() % 24 + "h " +
+                    duration.dividedBy(4).toMinutes() % 60 + "m";
+            recoveredLifeExpectancyTextView.setText(recoveredLifeExpectancy);
+
+            long cigaretteNotSmoked = duration.toDays() * profile.cigarettesPerDay;
+            unsmokedCigarettesTextView.setText(String.valueOf(cigaretteNotSmoked));
+
+            float moneySaved = cigaretteNotSmoked * profile.pricePerPack / profile.cigarettesInPack;
+            String moneySavedString = String.format(Locale.getDefault(), "%.2f", moneySaved) + profile.currency;
+            moneySavedTextView.setText(moneySavedString);
+
+            setProgressValues(3);
+
+        } else {
+            String moneySavedString = "0" + profile.currency;
+            moneySavedTextView.setText(moneySavedString);
+            setProgressValues(3);
+
+        }
+
+        int delta = (int) duration.toDays() + 1;
+        String days;
+
+        if (delta == 1)
+            days = delta + " " + getResources().getString(R.string.day);
+        else
+            days = delta + " " + getResources().getString(R.string.days);
+
+        dayTextView.setText(days);
+
+    }
+
     public void showPopup(View v) {
 
         PopupMenu menu = new PopupMenu(getContext(), v);
@@ -120,99 +212,37 @@ public class ProgressFragment extends Fragment {
         });
     }
 
-    public void setData() {
-
-        AppViewModel appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
-        appViewModel.getProfiles().observe(getViewLifecycleOwner(), profiles -> {
-
-            if (profiles.isEmpty()) {
-                Intent intent = new Intent(getContext(), ProfileActivity.class);
-                startActivity(intent);
-
-                profile = profiles.get(0);
-            } else {
-                profile = profiles.get(0);
-                calculateValues();
-            }
-
-
-//TODO
-//            final Handler handler = new Handler();
-//            final int delay = 1000;
-//            handler.postDelayed(new Runnable() {
-//                public void run() {
-//                    calculateValues();
-//                    handler.postDelayed(this, delay);
-//                }
-//            }, delay);
-
-
-            LocalDate dateOfBeginning = LocalDate.now();
-            dateOfBeginning = dateOfBeginning.minusYears(profile.yearsOfSmoking);
-            LocalDate quittingDate = LocalDate.parse(profile.quittingDate, dateTimeFormatter);
-
-            Period smokingDuration = Period.between(dateOfBeginning, quittingDate);
-            lifeLostTextView.setText(String.format(getString(R.string.life_lost_contents),
-                    smokingDuration.getYears(), smokingDuration.getMonths(), smokingDuration.getDays()));
-
-            long cigaretteSmoked = ChronoUnit.DAYS.between(dateOfBeginning, quittingDate) * profile.cigarettesPerDay;
-            smokedCigarettesTextView.setText(String.valueOf(cigaretteSmoked));
-            float moneySpent = (float) cigaretteSmoked * profile.pricePerPack / profile.cigarettesInPack;
-
-            String moneySpentText = moneySpent + " " + profile.currency;
-            moneySpentTextView.setText(moneySpentText);
-
-            String day = getResources().getStringArray(R.array.days)[1];
-
-            selectedDaysTextView.setText(day);
-            int numberOfDays = sharedPreferences.getInt(day, 0);
-            setProgressValues(numberOfDays);
-
-        });
-
-    }
-
-    private void calculateValues() {
+    private void setProgressValues(int numberOfDays) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalDateTime quittingDate = LocalDateTime.parse(profile.quittingDate, dateTimeFormatter);
 
-        Duration duration = Duration.between(quittingDate, currentDateTime);
-        String nonSmokerString = duration.toDays() + "d " + duration.toHours() + "h " +
-                duration.toMinutes() + "m";
-        nonSmokerTextView.setText(nonSmokerString);
+        if (quittingDate.isBefore(currentDateTime)) {
+            Duration duration = Duration.between(quittingDate, currentDateTime);
 
-        String recoveredLifeExpectancy = duration.dividedBy(4).toDays() + "d " + duration.dividedBy(4).toHours() + "h " +
-                duration.dividedBy(4).toMinutes() + "m";
-        recoveredLifeExpectancyTextView.setText(recoveredLifeExpectancy);
+            long days = duration.toDays();
+            float progressPercent;
 
-        long cigaretteNotSmoked = duration.toDays() * profile.cigarettesPerDay;
-        unsmokedCigarettesTextView.setText(String.valueOf(cigaretteNotSmoked));
+            if (days >= numberOfDays)
+                progressPercent = 100;
 
-        float moneySaved = cigaretteNotSmoked * profile.pricePerPack / profile.cigarettesInPack;
-        String moneySavedString = String.format(Locale.getDefault(), "%.2f", moneySaved) + " " + profile.currency;
-        moneySavedTextView.setText(moneySavedString);
+            else
+                progressPercent = days * 100.0f / numberOfDays;
 
-        String days = (int) duration.toDays() + 1 + " " + getResources().getString(R.string.days);
-        dayTextView.setText(days);
-    }
 
-    private void setProgressValues(float numberOfDays) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        LocalDateTime quittingDate = LocalDateTime.parse(profile.quittingDate, dateTimeFormatter);
-        Duration duration = Duration.between(quittingDate, currentDateTime);
+            String progressPercentStr;
+            progressPercentStr = String.format(Locale.getDefault(), "%.1f", progressPercent) + "%";
 
-        float progressPercent = duration.toDays() * 100 / numberOfDays;
+            progressPercentTextView.setText(progressPercentStr);
+            onProgressPercentChanged((int) progressPercent);
 
-        String progressPercentStr;
-        if (progressPercent > 100) {
+        } else {
+            String progressPercentStr;
+            progressPercentStr = String.format(Locale.getDefault(), "%.1f", 0.0) + "%";
 
-            progressPercent = 100;
+            progressPercentTextView.setText(progressPercentStr);
+            onProgressPercentChanged(0);
         }
 
-        progressPercentStr = String.format(Locale.getDefault(), "%.1f", progressPercent) + " %";
-
-        progressPercentTextView.setText(progressPercentStr);
-        onProgressPercentChanged((int) progressPercent);
     }
 
     private void onProgressPercentChanged(int percentage) {
