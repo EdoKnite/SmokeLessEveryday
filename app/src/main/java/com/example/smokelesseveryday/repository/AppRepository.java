@@ -43,11 +43,8 @@ public class AppRepository {
         SmokeLessDatabase.databaseWriteExecutor.execute(() -> healthDao.delete(health));
     }
 
-    public Profile getProfile() {
-        if (profiles.getValue() == null)
-            return null;
-
-        return profiles.getValue().get(0);
+    public LiveData<List<Profile>> getProfiles() {
+        return profiles;
     }
 
     public void insertProfile(Profile profile) {

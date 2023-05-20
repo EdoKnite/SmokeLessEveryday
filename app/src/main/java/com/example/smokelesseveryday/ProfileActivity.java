@@ -99,15 +99,20 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     private void getProfile() {
-        Profile profile = appViewModel.getProfile();
-        if (profile != null) {
-            cigarettesPerPackEditText.setText(String.valueOf(profile.cigarettesInPack));
-            yearOfSmokingEditText.setText(String.valueOf(profile.yearsOfSmoking));
-            pricePerPackEditText.setText(String.valueOf(profile.pricePerPack));
-            currencySpinner.setSelection(1);
-            cigarettesPerDayEditText.setText(String.valueOf(profile.cigarettesPerDay));
-            dateStoppingEditText.setText(profile.quittingDate);
-        }
+        appViewModel.getProfiles().observe(this, profiles -> {
+
+            if (!profiles.isEmpty()) {
+                Profile profile = profiles.get(0);
+
+                cigarettesPerPackEditText.setText(String.valueOf(profile.cigarettesInPack));
+                yearOfSmokingEditText.setText(String.valueOf(profile.yearsOfSmoking));
+                pricePerPackEditText.setText(String.valueOf(profile.pricePerPack));
+                currencySpinner.setSelection(3);
+                cigarettesPerDayEditText.setText(String.valueOf(profile.cigarettesPerDay));
+                dateStoppingEditText.setText(profile.quittingDate);
+            }
+        });
+
     }
 
     private void saveProfile() {
@@ -126,18 +131,25 @@ public class ProfileActivity extends AppCompatActivity {
             setErrorMessageToRequiredFields(pricePerPackEditText, pricePerPackWrapper, !TextUtils.isEmpty(pricePerPackEditText.getText()));
             setErrorMessageToRequiredFields(dateStoppingEditText, dateStoppingWrapper, !TextUtils.isEmpty(dateStoppingEditText.getText()));
             setErrorMessageToSpinner(currencySpinner, !TextUtils.isEmpty(currencySpinner.getSelectedItem().toString()));
-            Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.msg_required_fields_empty), Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.msg_required_fields_empty), Toast.LENGTH_SHORT);
             toast.show();
         } else {
-            Profile profile = appViewModel.getProfile();
-            if (profile == null) {
-                profile = new Profile(0, stoppingDate, Integer.parseInt(cigarettesPerDay), Integer.parseInt(cigarettesPerPack), Integer.parseInt(yearOfSmoking), Integer.parseInt(pricePerPack), currency);
-                appViewModel.insertProfile(profile);
-            } else {
-                profile = new Profile(profile.uid, stoppingDate, Integer.parseInt(cigarettesPerDay), Integer.parseInt(cigarettesPerPack), Integer.parseInt(yearOfSmoking), Integer.parseInt(pricePerPack), currency);
-                appViewModel.updateProfile(profile);
-            }
-            finish();
+            appViewModel.getProfiles().observe(this, profiles -> {
+                Profile profile;
+
+                if (profiles.isEmpty()) {
+                    profile = new Profile(0, stoppingDate, Integer.parseInt(cigarettesPerDay), Integer.parseInt(cigarettesPerPack), Integer.parseInt(yearOfSmoking), Integer.parseInt(pricePerPack), currency);
+                    appViewModel.insertProfile(profile);
+
+                } else {
+                    profile = profiles.get(0);
+                    profile = new Profile(profile.uid, stoppingDate, Integer.parseInt(cigarettesPerDay), Integer.parseInt(cigarettesPerPack), Integer.parseInt(yearOfSmoking), Float.parseFloat(pricePerPack), currency);
+                    appViewModel.updateProfile(profile);
+
+                }
+                finish();
+
+            });
         }
     }
 
@@ -206,14 +218,14 @@ public class ProfileActivity extends AppCompatActivity {
 
     DatePickerDialog.OnDateSetListener onStoppingDateChangeListener = (view, year, monthOfYear, dayOfMonth) -> {
 
-        String date = LocalDateTime.of(year, monthOfYear, dayOfMonth, 0,0).format(dateTimeFormatter);
+        String date = LocalDateTime.of(year, monthOfYear, dayOfMonth, 0, 0).format(dateTimeFormatter);
         dateStoppingEditText.setText(date);
 
         showTime(onTimeStoppingSetListener);
     };
 
     private void showCalender(DatePickerDialog.
-            OnDateSetListener onDateSetListener) {
+                                      OnDateSetListener onDateSetListener) {
         DatePickerDialog picker = new DatePickerDialog(ProfileActivity.this, R.style.DialogDateTheme, onDateSetListener, 2023, 5, 18);
         picker.show();
     }

@@ -39,8 +39,8 @@ public class AppViewModel extends AndroidViewModel {
         appRepository.deleteAchievement(health);
     }
 
-    public Profile getProfile() {
-        return appRepository.getProfile();
+    public LiveData<List<Profile>> getProfiles() {
+        return appRepository.getProfiles();
 
     }
 

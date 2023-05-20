@@ -59,4 +59,5 @@
     <string name="one_week">1 Week</string>
     <string name="two_week">2 Weeks</string>
     <string name="_76_650">76 650</string>
+    <string name="life_lost_contents">%1$dY %2$dM %3$dD</string>
 </resources>

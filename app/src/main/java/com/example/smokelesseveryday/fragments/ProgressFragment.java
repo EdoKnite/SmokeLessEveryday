@@ -2,9 +2,10 @@ package com.example.smokelesseveryday.fragments;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +33,8 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.ListIterator;
+import java.util.Locale;
 
 public class ProgressFragment extends Fragment {
 
@@ -43,28 +44,32 @@ public class ProgressFragment extends Fragment {
     private DateTimeFormatter dateTimeFormatter;
     private Profile profile;
     private ProgressBar progressBar;
-
-    private final HashMap<String, Integer> selectedDays
-            = new HashMap<>();
+    private SharedPreferences sharedPreferences;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        selectedDays.put("2 days", 2);
-        selectedDays.put("3 days", 3);
-        selectedDays.put("4 days", 4);
-        selectedDays.put("5 days", 5);
-        selectedDays.put("6 days", 6);
-        selectedDays.put("1 week", 7);
-        selectedDays.put("10 days", 10);
-        selectedDays.put("2 weeks", 14);
-        selectedDays.put("3 weeks", 21);
-        selectedDays.put("1 month", 30);
-        selectedDays.put("2 month", 60);
-        selectedDays.put("3 month", 90);
-        selectedDays.put("1 year", 365);
-        selectedDays.put("5 years", 1825);
+        String[] daysArray = getResources().getStringArray(R.array.days);
+        sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putInt(daysArray[0], 2);
+        editor.putInt(daysArray[1], 3);
+        editor.putInt(daysArray[2], 4);
+        editor.putInt(daysArray[3], 5);
+        editor.putInt(daysArray[4], 6);
+        editor.putInt(daysArray[5], 7);
+        editor.putInt(daysArray[6], 10);
+        editor.putInt(daysArray[7], 14);
+        editor.putInt(daysArray[8], 21);
+        editor.putInt(daysArray[9], 30);
+        editor.putInt(daysArray[10], 60);
+        editor.putInt(daysArray[11], 90);
+        editor.putInt(daysArray[12], 365);
+        editor.putInt(daysArray[13], 1825);
+        editor.apply();
 
         return inflater.inflate(R.layout.fragment_progress, container, false);
     }
@@ -89,7 +94,7 @@ public class ProgressFragment extends Fragment {
         moneySpentTextView = view.findViewById(R.id.money_spent_text_view);
         lifeLostTextView = view.findViewById(R.id.life_lost_text_view);
 
-        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         setData();
     }
 
@@ -105,9 +110,12 @@ public class ProgressFragment extends Fragment {
 
         menu.show();
         menu.setOnMenuItemClickListener(item -> {
+
             selectedDaysTextView.setText(item.getTitle());
-            int numberOfDays = selectedDays.get(item.getTitle());
+
+            int numberOfDays = sharedPreferences.getInt(item.getTitle().toString(), 0);
             setProgressValues(numberOfDays);
+
             return false;
         });
     }
@@ -115,15 +123,20 @@ public class ProgressFragment extends Fragment {
     public void setData() {
 
         AppViewModel appViewModel = new ViewModelProvider(requireActivity()).get(AppViewModel.class);
-        this.profile = appViewModel.getProfile();
+        appViewModel.getProfiles().observe(getViewLifecycleOwner(), profiles -> {
 
-        if (profile == null) {
+            if (profiles.isEmpty()) {
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
+                startActivity(intent);
 
-            Intent intent = new Intent(getContext(), ProfileActivity.class);
-            startActivity(intent);
-        } else {
-            calculateValues();
+                profile = profiles.get(0);
+            } else {
+                profile = profiles.get(0);
+                calculateValues();
+            }
 
+
+//TODO
 //            final Handler handler = new Handler();
 //            final int delay = 1000;
 //            handler.postDelayed(new Runnable() {
@@ -132,57 +145,36 @@ public class ProgressFragment extends Fragment {
 //                    handler.postDelayed(this, delay);
 //                }
 //            }, delay);
-        }
-//TODO
-        this.profile = new Profile(0, "2023-10-10 10:10:00", 1, 1, 1, 1, "USD");
-        LocalDate dateOfBeginning = LocalDate.now();
-        dateOfBeginning = dateOfBeginning.minusYears(profile.yearsOfSmoking);
-        LocalDate quittingDate = LocalDate.parse(profile.quittingDate, dateTimeFormatter);
-
-        Period smokingDuration = Period.between(dateOfBeginning, quittingDate);
-        lifeLostTextView.setText(smokingDuration.getYears() + "Y " + smokingDuration.getMonths() + "M "
-                + smokingDuration.getDays() + "D");
-
-        long cigaretteSmoked = ChronoUnit.DAYS.between(dateOfBeginning, quittingDate) * profile.cigarettesPerDay;
-        smokedCigarettesTextView.setText(String.valueOf(cigaretteSmoked));
-        float moneySpent = (float) cigaretteSmoked * profile.pricePerPack / profile.cigarettesInPack;
-        moneySpentTextView.setText((int) moneySpent + " " + profile.currency);
-
-        selectedDaysTextView.setText("3 days");
-        int numberOfDays = selectedDays.get("3 days");
-        setProgressValues(numberOfDays);
-    }
 
 
-    private void setProgressValues(float numberOfDays) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        LocalDateTime quittingDate = LocalDateTime.parse(profile.quittingDate, dateTimeFormatter);
-        Duration duration = Duration.between(quittingDate, currentDateTime);
+            LocalDate dateOfBeginning = LocalDate.now();
+            dateOfBeginning = dateOfBeginning.minusYears(profile.yearsOfSmoking);
+            LocalDate quittingDate = LocalDate.parse(profile.quittingDate, dateTimeFormatter);
 
-        float progressPercent = duration.toDays() * 100 / numberOfDays;
+            Period smokingDuration = Period.between(dateOfBeginning, quittingDate);
+            lifeLostTextView.setText(String.format(getString(R.string.life_lost_contents),
+                    smokingDuration.getYears(), smokingDuration.getMonths(), smokingDuration.getDays()));
 
-        String progressPercentStr;
-        if (progressPercent > 100) {
+            long cigaretteSmoked = ChronoUnit.DAYS.between(dateOfBeginning, quittingDate) * profile.cigarettesPerDay;
+            smokedCigarettesTextView.setText(String.valueOf(cigaretteSmoked));
+            float moneySpent = (float) cigaretteSmoked * profile.pricePerPack / profile.cigarettesInPack;
 
-            progressPercent = 100;
-        }
+            String moneySpentText = moneySpent + " " + profile.currency;
+            moneySpentTextView.setText(moneySpentText);
 
-        progressPercentStr = String.format("%.1f", progressPercent) + " %";
+            String day = getResources().getStringArray(R.array.days)[1];
 
-        progressPercentTextView.setText(progressPercentStr);
-        onProgressPercentChanged((int) progressPercent);
-    }
+            selectedDaysTextView.setText(day);
+            int numberOfDays = sharedPreferences.getInt(day, 0);
+            setProgressValues(numberOfDays);
 
-    private void onProgressPercentChanged(int percentage) {
-        Animator animation = ObjectAnimator.ofInt(progressBar, "progress", percentage);
-        animation.setDuration(750);
-        animation.setInterpolator(new DecelerateInterpolator());
-        animation.start();
+        });
+
     }
 
     private void calculateValues() {
         LocalDateTime currentDateTime = LocalDateTime.now();
-        LocalDate quittingDate = LocalDate.parse(profile.quittingDate, dateTimeFormatter);
+        LocalDateTime quittingDate = LocalDateTime.parse(profile.quittingDate, dateTimeFormatter);
 
         Duration duration = Duration.between(quittingDate, currentDateTime);
         String nonSmokerString = duration.toDays() + "d " + duration.toHours() + "h " +
@@ -197,10 +189,36 @@ public class ProgressFragment extends Fragment {
         unsmokedCigarettesTextView.setText(String.valueOf(cigaretteNotSmoked));
 
         float moneySaved = cigaretteNotSmoked * profile.pricePerPack / profile.cigarettesInPack;
-        String moneySavedString = String.format("%.2f", moneySaved) + " " + profile.currency;
+        String moneySavedString = String.format(Locale.getDefault(), "%.2f", moneySaved) + " " + profile.currency;
         moneySavedTextView.setText(moneySavedString);
 
         String days = (int) duration.toDays() + 1 + " " + getResources().getString(R.string.days);
         dayTextView.setText(days);
+    }
+
+    private void setProgressValues(float numberOfDays) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime quittingDate = LocalDateTime.parse(profile.quittingDate, dateTimeFormatter);
+        Duration duration = Duration.between(quittingDate, currentDateTime);
+
+        float progressPercent = duration.toDays() * 100 / numberOfDays;
+
+        String progressPercentStr;
+        if (progressPercent > 100) {
+
+            progressPercent = 100;
+        }
+
+        progressPercentStr = String.format(Locale.getDefault(), "%.1f", progressPercent) + " %";
+
+        progressPercentTextView.setText(progressPercentStr);
+        onProgressPercentChanged((int) progressPercent);
+    }
+
+    private void onProgressPercentChanged(int percentage) {
+        Animator animation = ObjectAnimator.ofInt(progressBar, "progress", percentage);
+        animation.setDuration(750);
+        animation.setInterpolator(new DecelerateInterpolator());
+        animation.start();
     }
 }

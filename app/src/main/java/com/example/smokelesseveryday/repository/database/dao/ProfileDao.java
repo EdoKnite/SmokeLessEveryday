@@ -2,7 +2,6 @@ package com.example.smokelesseveryday.repository.database.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -22,6 +21,4 @@ public interface ProfileDao {
     @Update
     void update(Profile... profile);
 
-    @Delete
-    void delete(Profile profile);
 }
