@@ -178,7 +178,7 @@ public class ProgressFragment extends Fragment {
 
         }
 
-        int delta = (int) duration.toDays() + 1;
+        int delta = (int) duration.toDays() ;
         String days;
 
         if (delta == 1)
