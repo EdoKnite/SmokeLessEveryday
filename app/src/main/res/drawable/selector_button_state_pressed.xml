@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background -->
+    <item>
+        <shape>
+            <size android:width="48dp" android:height="48dp" />
+            <solid android:color="@color/orange" />
+            <corners android:radius="1dp" />
+            <stroke
+                android:width="0.2dp"
+                android:color="#000000" />
+        </shape>
+    </item>
+
+    <!-- Icon -->
+    <item
+        android:drawable="@drawable/ic_person"
+        android:gravity="center"
+        android:height="35dp"
+        android:width="35dp"/>
+</layer-list>
