@@ -13,4 +13,5 @@
     <color name="progress">#2196F3</color>
     <color name="completed">#4CAF50</color>
     <color name="orange">#FFFF9800</color>
+    <color name="red">#F44336</color>
 </resources>
